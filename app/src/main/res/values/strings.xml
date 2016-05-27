@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Room Controller</string>
+    <string name="bulb_2">BLUE Bulb</string>
+    <string name="fan">Fan</string>
+    <string name="tube_light">Tube Light</string>
+    <string name="bulb_1">RED Bulb</string>
+    <string name="connect">Re-Connect</string>
+    <string name="HelpText">This app helps you to control your room wirelessly.\nFollow these steps to get started.\n\n1)\tSelect the device that you want to connect to.\n\t(Make sure it has been paired)\n\n2)\tOnce the CONNECTED notification is shown, you can start turning on and off the swithces.\n\tIn case you do not get the CONNECTED notification, press RE-CONNECT and try again\n\nNOTE:You need to setup the arduino with the switch board.</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

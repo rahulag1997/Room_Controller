@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:title="Default Bluetooth Device"
+        android:key="defaultDeviceName"
+        android:summary="The default Device which will be connected automatically"        ></EditTextPreference>
+
+    <EditTextPreference
+        android:title="No. of Applications"
+        android:key="numOfDevices"
+        ></EditTextPreference>
+</PreferenceScreen>
