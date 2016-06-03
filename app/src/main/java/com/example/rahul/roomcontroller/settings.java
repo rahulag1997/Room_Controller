@@ -1,6 +1,7 @@
 package com.example.rahul.roomcontroller;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
@@ -79,7 +80,7 @@ public class settings extends Activity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                builder = new AlertDialog.Builder(getApplicationContext());
+                /*builder = new AlertDialog.Builder(getApplicationContext());
                 editText=new EditText(getApplicationContext());
                 editText.setLines(1);
                 editText.setHint("Device Name");
@@ -108,7 +109,10 @@ public class settings extends Activity
                     }
                 });
                 AlertDialog temp=builder.create();
-                temp.show();
+                temp.show();*/
+
+                DialogFragment dialogBox=new customDialog();
+                dialogBox.show(getFragmentManager(),"device");
             }
         });
     }
