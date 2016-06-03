@@ -20,13 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".connect" />
-        <activity android:name=".controller" />
+        <activity android:name=".automator" />
         <activity
             android:name=".help"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".controllerAuto" />
-        <activity android:name=".settings"></activity>
+        <activity android:name=".settings"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

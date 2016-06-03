@@ -43,12 +43,6 @@ public class Home extends AppCompatActivity
     }
 
 
-    public void connect(View view)
-    {
-        Intent i=new Intent(this,connect.class);
-        startActivity(i);
-    }
-
     public void settings(View view)
     {
         Intent i= new Intent(this,settings.class);
@@ -62,7 +56,7 @@ public class Home extends AppCompatActivity
 
     public void autoControl(View view)
     {
-        Intent i=new Intent(this,controller.class);
+        Intent i=new Intent(this,automator.class);
         startActivity(i);
     }
 }

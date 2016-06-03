@@ -19,14 +19,6 @@
         android:id="@+id/HelloTextBox"
         android:text="Hello World!" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/ConnectBox"
-        android:onClick="connect"
-        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -34,7 +26,7 @@
         android:layout_gravity="center_horizontal"
         android:text="control"
         android:onClick="autoControl"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="wrap_content"

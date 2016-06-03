@@ -91,13 +91,19 @@ public class settings extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        nameOfApps.set(position,editText.getText().toString()) ;
+                        nameOfApps.set(position, editText.getText().toString());
+                        adapterOfDevices.clear();
+                        for (int i = 0; i < noOfDevices; i++)
+                        {
+                            adapterOfDevices.add(nameOfApps.get(i));
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
                 {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.cancel();
                     }
                 });

@@ -8,19 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,17 +25,24 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-public class controllerAuto extends AppCompatActivity
+public class automator extends AppCompatActivity
 {
-    Switch fan,tube,bulb1,bulb2,all;
-    ImageButton voice;
-    ImageView fanImg,tubeImg,bulb1Img,bulb2Img;
-    ConnectedThread connectedThread;
-    ConnectThread connect;
-
+    String defaultDevice="HC-05";
+    BluetoothAdapter bt;
+    BroadcastReceiver receiver;
+    BluetoothDevice device;
+    IntentFilter filter1=new IntentFilter(BluetoothDevice.ACTION_FOUND);
+    private static final int REQUEST_ENABLE_BT = 11;
+    Set<BluetoothDevice> arrayOfDevices;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb") ;
     private static final int SUCCESS_CONNECT =0 ;
     private static final int MESSAGE_READ = 1;
+    ConnectedThread connectedThread;
+    ConnectThread connect;
+    boolean connectStatus=false;
+    final static int SPEAK=1;
+    ArrayList<String> result;
+
     Handler mHandler= new Handler(){
         @Override
         public void handleMessage(Message msg)
@@ -60,32 +64,25 @@ public class controllerAuto extends AppCompatActivity
             }
         }
     };
-    boolean connectStatus=false;
-    final static int SPEAK=1;
-    ArrayList<String> result;
-    private static final int REQUEST_ENABLE_BT = 11;
 
-    BluetoothAdapter bt;
-    BluetoothDevice device;
-    IntentFilter filter1=new IntentFilter(BluetoothDevice.ACTION_FOUND);
-    BroadcastReceiver receiver;
-    Set<BluetoothDevice> arrayOfDevices;
-    String defaultDevice="HC-05";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_controller_auto);
+        setLayout();
         setup();
+    }
+
+    private void setup()
+    {
         Thread connector=new Thread()
         {
             @Override
             public void run()
             {
+                super.run();
                 SharedPreferences preferences=getApplicationContext().getSharedPreferences("MY_PREFS",MODE_PRIVATE);
                 defaultDevice =preferences.getString("defDevice","HC-05");
-                super.run();
                 setupBackground();
                 connectAuto();
             }
@@ -93,71 +90,9 @@ public class controllerAuto extends AppCompatActivity
         connector.run();
     }
 
-    private void setup()
-    {
-        voice=(ImageButton)findViewById(R.id.voiceButton);
-        fan=(Switch)findViewById(R.id.fanSwitch);
-        tube=(Switch)findViewById(R.id.tubeSwitch);
-        bulb1=(Switch)findViewById(R.id.bulb1Switch);
-        bulb2=(Switch)findViewById(R.id.bulb2Switch);
-        all=(Switch)findViewById(R.id.allSwitch);
-        fanImg=(ImageView)findViewById(R.id.fanImage);
-        tubeImg=(ImageView)findViewById(R.id.tubeImage);
-        bulb1Img=(ImageView)findViewById(R.id.bulb1Image);
-        bulb2Img=(ImageView)findViewById(R.id.bulb2Image);
-        fanImg.setImageResource(R.drawable.fan);
-        tubeImg.setImageResource(R.drawable.bulboff);
-        bulb1Img.setImageResource(R.drawable.bulboff);
-        bulb2Img.setImageResource(R.drawable.bulboff);
-        fan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
-                    fanOn();
-                else
-                    fanOff();
-            }
-        });
-        tube.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
-                    lightOn();
-                else
-                    lightOff();
-            }
-        });
-        bulb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
-                    bulb1On();
-                else
-                    bulb1Off();
-            }
-        });
-        bulb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
-                    bulb2On();
-                else
-                    bulb2Off();
-            }
-        });
-    }
-
     private void setupBackground()
     {
-        bt=BluetoothAdapter.getDefaultAdapter();
+        bt= BluetoothAdapter.getDefaultAdapter();
         if(bt==null)
         {
             Toast.makeText(this,"This application needs Bluetooth. Cannot proceed further.",Toast.LENGTH_SHORT).show();
@@ -222,91 +157,31 @@ public class controllerAuto extends AppCompatActivity
         return false;
     }
 
-    private void fanOff()
+
+    private void setLayout()
+    {
+        //CREATE CUSTOM LAYOUT
+
+        //get values
+        //SharedPreferences prefs=this.getSharedPreferences("MY_PREFS")
+    }
+
+    private void switchOn(char a)
     {
         if(connectStatus)
         {
-            String s="*F0#";
+            String s="*" + a + "1#";
             connectedThread.write(s.getBytes());
         }
-        fanImg.setImageResource(R.drawable.fan);
     }
 
-    private void fanOn()
+    private void switchOff(char a)
     {
         if(connectStatus)
         {
-            String s="*F1#";
+            String s="*" + a + "0#";
             connectedThread.write(s.getBytes());
         }
-        fanImg.setImageResource(R.drawable.fanon);
-    }
-
-    private void lightOff()
-    {
-        if(connectStatus)
-        {
-            String s="*L0#";
-            connectedThread.write(s.getBytes());
-        }
-        tubeImg.setImageResource(R.drawable.bulboff);
-    }
-
-    private void lightOn()
-    {
-        if(connectStatus)
-        {
-            String s="*L1#";
-            connectedThread.write(s.getBytes());
-        }
-        tubeImg.setImageResource(R.drawable.yellowon);
-    }
-
-    private void bulb1Off()
-    {
-        if(connectStatus)
-        {
-            String s="*B0#";
-            connectedThread.write(s.getBytes());
-        }
-        bulb1Img.setImageResource(R.drawable.bulboff);
-    }
-
-    private void bulb1On()
-    {
-        if(connectStatus)
-        {
-            String s="*B1#";
-            connectedThread.write(s.getBytes());
-        }
-        bulb1Img.setImageResource(R.drawable.redon);
-    }
-
-    private void bulb2Off()
-    {
-        if(connectStatus)
-        {
-            String s="*b0#";
-            connectedThread.write(s.getBytes());
-        }
-        bulb2Img.setImageResource(R.drawable.bulboff);
-    }
-
-    private void bulb2On()
-    {
-        if(connectStatus)
-        {
-            String s="*b1#";
-            connectedThread.write(s.getBytes());
-        }
-        bulb2Img.setImageResource(R.drawable.blueon);
-    }
-
-    public void reConnect(View view)
-    {
-        Intent i = new Intent(this,connect.class);
-        startActivity(i);
-        finish();
     }
 
     public void voiceIn(View view)
@@ -336,52 +211,11 @@ public class controllerAuto extends AppCompatActivity
     {
         for(String vIn:result)
         {
-            vIn=vIn.toLowerCase();
-            if(vIn.contains("all"))
-            {
-                if(vIn.contains("on"))
-                    all.setChecked(true);
-                else if(vIn.contains("off") || vIn.contains("close") || vIn.contains("of"))
-                    all.setChecked(false);
-            }
-            else if(vIn.contains("red"))
-            {
-                if (vIn.contains("on"))
-                    bulb1.setChecked(true);
-                else if (vIn.contains("off") || vIn.contains("close") || vIn.contains("of"))
-                    bulb1.setChecked(false);
-                else
-                    bulb1.toggle();
-            }
-            else if(vIn.contains("blue"))
-            {
-                if(vIn.contains("on"))
-                    bulb2.setChecked(true);
-                else if(vIn.contains("off") || vIn.contains("close") || vIn.contains("of"))
-                    bulb2.setChecked(false);
-                else
-                    bulb2.toggle();
-            }
-            else if(vIn.contains("light") || vIn.contains("tube"))
-            {
-                if(vIn.contains("on"))
-                    tube.setChecked(true);
-                else if(vIn.contains("off") || vIn.contains("close") || vIn.contains("of"))
-                    tube.setChecked(false);
-                else
-                    tube.toggle();
-            }
-            else if(vIn.contains("fan"))
-            {
-                if(vIn.contains("on"))
-                    fan.setChecked(true);
-                else if(vIn.contains("off") || vIn.contains("close") || vIn.contains("of"))
-                    fan.setChecked(false);
-                else
-                    fan.toggle();
-            }
+            vIn = vIn.toLowerCase();
+            //add customs
         }
     }
+
 
     private class ConnectThread extends Thread
     {
@@ -501,7 +335,6 @@ public class controllerAuto extends AppCompatActivity
         super.onStop();
         try {
             connectedThread.cancel();
-            connect.cancel();
             unregisterReceiver(receiver);
         }catch (Exception ignored){}
     }
@@ -511,7 +344,6 @@ public class controllerAuto extends AppCompatActivity
         super.onDestroy();
         try {
             connectedThread.cancel();
-            connect.cancel();
             unregisterReceiver(receiver);
         }catch (Exception ignored){}
     }
@@ -521,7 +353,6 @@ public class controllerAuto extends AppCompatActivity
         super.onBackPressed();
         try {
             connectedThread.cancel();
-            connect.cancel();
             unregisterReceiver(receiver);
         }catch (Exception ignored){}
     }
