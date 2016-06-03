@@ -26,7 +26,6 @@ public class settings extends Activity
     ArrayList<String> nameOfApps;
     AlertDialog.Builder builder;
     EditText editText;
-
     int noOfDevices=0;
 
     @Override
