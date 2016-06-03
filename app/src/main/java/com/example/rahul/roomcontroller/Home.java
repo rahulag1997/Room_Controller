@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,16 +14,15 @@ import android.view.View;
 public class Home extends AppCompatActivity
 {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+        setContentView(R.layout.activity_home);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             getPermission();
         }
     }
-
-
 
     private void getPermission()
     {
@@ -51,6 +49,11 @@ public class Home extends AppCompatActivity
         startActivity(i);
     }
 
+    public void settings(View view)
+    {
+        Intent i= new Intent(this,settings.class);
+        startActivity(i);
+    }
 
     public void exit(View view)
     {

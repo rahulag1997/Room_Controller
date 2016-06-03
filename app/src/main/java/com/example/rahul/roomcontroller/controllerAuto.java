@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -81,6 +83,8 @@ public class controllerAuto extends AppCompatActivity
             @Override
             public void run()
             {
+                SharedPreferences preferences=getApplicationContext().getSharedPreferences("MY_PREFS",MODE_PRIVATE);
+                defaultDevice =preferences.getString("defDevice","HC-05");
                 super.run();
                 setupBackground();
                 connectAuto();
@@ -147,17 +151,6 @@ public class controllerAuto extends AppCompatActivity
                     bulb2On();
                 else
                     bulb2Off();
-            }
-        });
-        all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked)
-            {
-                if(isChecked)
-                    allOn();
-                else
-                    allOff();
             }
         });
     }
@@ -307,25 +300,6 @@ public class controllerAuto extends AppCompatActivity
             connectedThread.write(s.getBytes());
         }
         bulb2Img.setImageResource(R.drawable.blueon);
-    }
-
-
-    private void allOff()
-    {
-        if(connectStatus)
-        {
-            String s="*A0#";
-            connectedThread.write(s.getBytes());
-        }
-    }
-
-    private void allOn()
-    {
-        if(connectStatus)
-        {
-            String s="*A1#";
-            connectedThread.write(s.getBytes());
-        }
     }
 
     public void reConnect(View view)

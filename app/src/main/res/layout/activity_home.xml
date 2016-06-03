@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -12,47 +13,55 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:textSize="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
         android:id="@+id/HelloTextBox"
         android:text="Hello World!" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/HelloTextBox"
-        android:text="HELP"
-        android:id="@+id/HelpButton"
-        android:onClick="help"
-        android:layout_marginTop="50dp"/>
+        android:text="Connect"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/ConnectBox"
+        android:onClick="connect"
+        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/ConnectBox"
-        android:onClick="connect"
-        android:layout_below="@+id/HelpButton"
+        android:layout_gravity="center_horizontal"
+        android:text="control"
+        android:onClick="autoControl"
         android:layout_marginTop="30dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="HELP"
+        android:id="@+id/HelpButton"
+        android:onClick="help"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/settingsButton"
+        android:onClick="settings"
+        android:layout_marginTop="30dp"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Exit"
         android:id="@+id/exitButton"
         android:onClick="exit"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/ConnectBox"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/exitButton"
-        android:layout_centerHorizontal="true"
-        android:text="control"
-        android:onClick="autoControl"
-        />
-</RelativeLayout>
+
+</LinearLayout>

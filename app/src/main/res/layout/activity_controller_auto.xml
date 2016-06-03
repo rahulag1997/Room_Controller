@@ -13,21 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="ALL"
-        android:id="@+id/allTextBox"
+        android:text="Fan"
+        android:id="@+id/fanTextBox"
         android:layout_marginLeft="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/fan"
-        android:id="@+id/fanTextBox"
-        android:layout_alignStart="@+id/allTextBox"
-        android:layout_alignLeft="@+id/allTextBox"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/allTextBox"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,22 +53,12 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/allSwitch"
+        android:id="@+id/fanSwitch"
         android:layout_marginTop="45dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="50dp"
         android:layout_marginEnd="50dp"/>
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fanSwitch"
-        android:layout_below="@+id/allSwitch"
-        android:layout_marginTop="45dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"/>
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

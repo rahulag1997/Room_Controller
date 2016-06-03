@@ -26,6 +26,7 @@
             android:name=".help"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".controllerAuto" />
+        <activity android:name=".settings"></activity>
     </application>
 
 </manifest>
