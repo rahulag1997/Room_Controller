@@ -1,5 +1,6 @@
 package com.example.rahul.roomcontroller;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -14,14 +15,30 @@ import android.widget.Toast;
 public class customDialog extends DialogFragment
 {
     //IS NOT CURRENTLY USED
+    public int position;
 
     public String newName="No Name";
+    onCustomDialog  listener ;
+    public static interface onCustomDialog{
+        public void settext(String name,int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (onCustomDialog) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         super.onCreateDialog(savedInstanceState);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        position=Integer.parseInt(getArguments().getString("pos"));
         final EditText editText=new EditText(getActivity());
         editText.setLines(1);
         editText.setHint("Device Name");
@@ -36,10 +53,8 @@ public class customDialog extends DialogFragment
             {
                 newName=editText.getText().toString();
                 Toast.makeText(getActivity(),newName, Toast.LENGTH_SHORT).show();
-
-                SharedPreferences preferences=getActivity().getSharedPreferences("MY_PREFS", Context.MODE_PRIVATE);;
-                SharedPreferences.Editor editor=preferences.edit();
-                editor.putString("name",newName);
+                if(newName !=null)
+                    listener.settext(newName,position);
                 dialog.dismiss();
             }
         });

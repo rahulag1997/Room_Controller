@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,9 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
-public class settings extends Activity
+public class settings extends AppCompatActivity implements  customDialog.onCustomDialog
 {
     EditText defBd, noBd;
     ListView listOfApps;
@@ -35,8 +38,21 @@ public class settings extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setup();
+
+
+
     }
 
+    public void settext(String name,int position)
+    {
+        Toast.makeText(getApplicationContext(),"Reached here",Toast.LENGTH_LONG).show();
+        String itemTodelete=adapterOfDevices.getItem(position);
+        adapterOfDevices.remove(itemTodelete);
+        adapterOfDevices.insert(name,position);
+        adapterOfDevices.notifyDataSetChanged();
+        listOfApps.setAdapter(adapterOfDevices);
+
+    }
     private void setup()
     {
         defBd = (EditText) findViewById(R.id.defaultBD);
@@ -110,8 +126,10 @@ public class settings extends Activity
                 });
                 AlertDialog temp=builder.create();
                 temp.show();*/
-
+                Bundle bundle =new Bundle();
+                bundle.putString("pos",String.valueOf(position));
                 DialogFragment dialogBox=new customDialog();
+                dialogBox.setArguments(bundle);
                 dialogBox.show(getFragmentManager(),"device");
             }
         });
