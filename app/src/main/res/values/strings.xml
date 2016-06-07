@@ -5,7 +5,7 @@
     <string name="tube_light">Tube Light</string>
     <string name="bulb_1">RED Bulb</string>
     <string name="connect">Re-Connect</string>
-    <string name="HelpText">This app helps you to control your room wirelessly.\nFollow these steps to get started.\n\n1)\tSelect the device that you want to connect to.\n\t(Make sure it has been paired)\n\n2)\tOnce the CONNECTED notification is shown, you can start turning on and off the swithces.\n\tIn case you do not get the CONNECTED notification, press RE-CONNECT and try again\n\nNOTE:You need to setup the arduino with the switch board.</string>
+    <string name="HelpText">This app helps you to control your room wirelessly.\nSetup the App according to your needs by going to setting.\n1)\tAdd Default Device Name\n2)\tAdd number of appliances\n3)\tSet custom names(optional)\n\nNOTE:You need to setup the arduino with the switch board.</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -69,4 +69,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="device_name">DEVICE NAME</string>
 </resources>

@@ -20,16 +20,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class settings extends AppCompatActivity implements  customDialog.onCustomDialog
+public class settings extends AppCompatActivity implements customDialog.onCustomDialog,customDialog2.onCustomDialog2,customDialog3.onCustomDialog3
 {
     EditText defBd, noBd;
     ListView listOfApps;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     ArrayAdapter<String> adapterOfDevices;
-    ArrayList<String> nameOfApps;
-    AlertDialog.Builder builder;
-    EditText editText;
     int noOfDevices=0;
 
     @Override
@@ -38,20 +35,63 @@ public class settings extends AppCompatActivity implements  customDialog.onCusto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setup();
-
-
-
+        setupValues();
     }
 
-    public void settext(String name,int position)
+    private void setupValues()
     {
-        Toast.makeText(getApplicationContext(),"Reached here",Toast.LENGTH_LONG).show();
-        String itemTodelete=adapterOfDevices.getItem(position);
-        adapterOfDevices.remove(itemTodelete);
+        preferences = this.getSharedPreferences("MY_PREFS", MODE_PRIVATE);
+        if(!preferences.getString("defDevice",null).equals(null))
+        {
+            defBd.setText(preferences.getString("defDevice","HC-05"));
+        }
+        if(preferences.getInt("noOfApps",0)!=0)
+        {
+            noOfDevices=preferences.getInt("noOfApps",0);
+            noBd.setText(Integer.toString(noOfDevices));
+            //adapterOfDevices.clear();
+            for(int i=0;i<preferences.getInt("noOfApps",0);i++)
+            {
+                adapterOfDevices.add(preferences.getString(("Device"+i),"DEVICE "+(i+1)));
+            }
+            adapterOfDevices.notifyDataSetChanged();
+        }
+    }
+
+    public void setText(String name,int position)
+    {
+        preferences = this.getSharedPreferences("MY_PREFS", MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putString(("Device"+position),name);
+        editor.commit();
+        String itemToDelete=adapterOfDevices.getItem(position);
+        adapterOfDevices.remove(itemToDelete);
         adapterOfDevices.insert(name,position);
         adapterOfDevices.notifyDataSetChanged();
         listOfApps.setAdapter(adapterOfDevices);
+    }
 
+    public void setDevice(String name)
+    {
+        defBd.setText(name);
+        preferences = this.getSharedPreferences("MY_PREFS", MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putString(("defDevice"),name);
+        editor.commit();
+    }
+
+    public void setVal(int val)
+    {
+        noBd.setText(""+val);
+        adapterOfDevices.clear();
+        noOfDevices = val;
+        editor.putInt("noOfApps", noOfDevices);
+        editor.commit();
+        for (int i = 0; i < noOfDevices; i++) {
+            adapterOfDevices.add("DEVICE " + (i + 1));
+            editor.putString(("Device" + i), "DEVICE " + (i + 1));
+            editor.commit();
+        }
     }
     private void setup()
     {
@@ -59,10 +99,21 @@ public class settings extends AppCompatActivity implements  customDialog.onCusto
         noBd = (EditText) findViewById(R.id.noOfApps);
         listOfApps = (ListView) findViewById(R.id.listOfApps);
         adapterOfDevices = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, 0);
-        nameOfApps=new ArrayList<String>();
         listOfApps.setAdapter(adapterOfDevices);
         preferences = this.getSharedPreferences("MY_PREFS", MODE_PRIVATE);
         editor = preferences.edit();
+        defBd.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Bundle bundle =new Bundle();
+                bundle.putString("currVal",defBd.getText().toString());
+                DialogFragment dialogBox=new customDialog2();
+                dialogBox.setArguments(bundle);
+                dialogBox.show(getFragmentManager(),"device");
+            }
+        });
         defBd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -74,6 +125,18 @@ public class settings extends AppCompatActivity implements  customDialog.onCusto
                 return false;
             }
         });
+        noBd.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Bundle bundle =new Bundle();
+                bundle.putInt("currVal",Integer.parseInt(noBd.getText().toString()));
+                DialogFragment dialogBox=new customDialog3();
+                dialogBox.setArguments(bundle);
+                dialogBox.show(getFragmentManager(),"device");
+            }
+        });
         noBd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -83,8 +146,9 @@ public class settings extends AppCompatActivity implements  customDialog.onCusto
                     editor.putInt("noOfApps", noOfDevices);
                     editor.commit();
                     for (int i = 0; i < noOfDevices; i++) {
-                        adapterOfDevices.add("DEVICE" + (i + 1));
-                        nameOfApps.add("DEVICE" + (i + 1));
+                        adapterOfDevices.add("DEVICE " + (i + 1));
+                        editor.putString(("Device" + i), "DEVICE " + (i + 1));
+                        editor.commit();
                     }
                     return true;
                 }
@@ -96,38 +160,9 @@ public class settings extends AppCompatActivity implements  customDialog.onCusto
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                /*builder = new AlertDialog.Builder(getApplicationContext());
-                editText=new EditText(getApplicationContext());
-                editText.setLines(1);
-                editText.setHint("Device Name");
-                editText.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(editText);
-                builder.setMessage("Enter Custom Device Name");
-                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        nameOfApps.set(position, editText.getText().toString());
-                        adapterOfDevices.clear();
-                        for (int i = 0; i < noOfDevices; i++)
-                        {
-                            adapterOfDevices.add(nameOfApps.get(i));
-                        }
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog temp=builder.create();
-                temp.show();*/
                 Bundle bundle =new Bundle();
-                bundle.putString("pos",String.valueOf(position));
+                bundle.putInt("pos",position);
+                bundle.putString("currVal",listOfApps.getItemAtPosition(position).toString());
                 DialogFragment dialogBox=new customDialog();
                 dialogBox.setArguments(bundle);
                 dialogBox.show(getFragmentManager(),"device");

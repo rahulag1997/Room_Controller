@@ -10,15 +10,13 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class customDialog extends DialogFragment
+public class customDialog2 extends DialogFragment
 {
-    public int position;
-
-    public String newName="No Name",currVal;
-    onCustomDialog  listener ;
-    public interface onCustomDialog
+        public String newName="No Name",currVal;
+    onCustomDialog2  listener ;
+    public interface onCustomDialog2
     {
-        void setText(String name,int position);
+        void setDevice(String name);
     }
 
     @Override
@@ -27,7 +25,7 @@ public class customDialog extends DialogFragment
         super.onAttach(activity);
         try
         {
-            listener = (onCustomDialog) activity;
+            listener = (onCustomDialog2) activity;
         } catch (ClassCastException e)
         {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
@@ -39,15 +37,14 @@ public class customDialog extends DialogFragment
     {
         super.onCreateDialog(savedInstanceState);
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        position=getArguments().getInt("pos");
         currVal=getArguments().getString("currVal");
         final EditText editText=new EditText(getActivity());
         editText.setText(currVal);
         editText.setLines(1);
-        editText.setHint("Device Name");
+        editText.setHint("Default Device Name");
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(editText);
-        builder.setMessage("Enter Custom Device Name");
+        builder.setMessage("Enter Default Device Name");
 
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
         {
@@ -56,7 +53,7 @@ public class customDialog extends DialogFragment
             {
                 newName=editText.getText().toString();
                 if(newName !=null)
-                    listener.setText(newName,position);
+                    listener.setDevice(newName);
                 dialog.dismiss();
             }
         });

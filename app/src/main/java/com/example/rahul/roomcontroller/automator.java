@@ -14,10 +14,18 @@ import android.os.Message;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,6 +50,9 @@ public class automator extends AppCompatActivity
     boolean connectStatus=false;
     final static int SPEAK=1;
     ArrayList<String> result;
+    SharedPreferences preferences;
+    int noOfDevices=4;
+    ArrayList<String> nameOfApps;
 
     Handler mHandler= new Handler(){
         @Override
@@ -65,7 +76,6 @@ public class automator extends AppCompatActivity
         }
     };
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +91,7 @@ public class automator extends AppCompatActivity
             public void run()
             {
                 super.run();
-                SharedPreferences preferences=getApplicationContext().getSharedPreferences("MY_PREFS",MODE_PRIVATE);
+                preferences=getApplicationContext().getSharedPreferences("MY_PREFS",MODE_PRIVATE);
                 defaultDevice =preferences.getString("defDevice","HC-05");
                 setupBackground();
                 connectAuto();
@@ -118,9 +128,7 @@ public class automator extends AppCompatActivity
                             bt.cancelDiscovery();
                         }
                         else
-                        {
                             Toast.makeText(getApplicationContext(),"Default Device is not paired",Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }
             }
@@ -131,9 +139,7 @@ public class automator extends AppCompatActivity
     private void connectAuto()
     {
         if(!bt.isEnabled())
-        {
             switchOnBT();
-        }
         bt.startDiscovery();
     }
 
@@ -160,10 +166,62 @@ public class automator extends AppCompatActivity
 
     private void setLayout()
     {
-        //CREATE CUSTOM LAYOUT
+        //Get Values
+        preferences=getApplicationContext().getSharedPreferences("MY_PREFS",MODE_PRIVATE);
+        noOfDevices=preferences.getInt("noOfApps",4);
+        nameOfApps=new ArrayList<String>();
+        for(int i=0;i<noOfDevices;i++)
+        {
+            nameOfApps.add(preferences.getString(("Device"+i),"DEVICE "+(i+1)));
+        }
+        LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout customLayout= new LinearLayout(getApplicationContext());
+        customLayout.setOrientation(LinearLayout.VERTICAL);
+        TextView textView[]=new TextView[noOfDevices];
+        Switch switches[]=new Switch[noOfDevices];
+        RelativeLayout lines[]=new RelativeLayout[noOfDevices+1];
+        for(int i=0;i<noOfDevices;i++)
+        {
+            lines[i]=(RelativeLayout)inflater.inflate(R.layout.custom_line,null);
+            textView[i]=(TextView)lines[i].findViewById(R.id.textView);
+            textView[i].setText(nameOfApps.get(i));
+            textView[i].setTextSize(20);
+            switches[i]= (Switch)lines[i].findViewById(R.id.switchButton);
+            switches[i].setId((100+i));
+            switches[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    buttonView.performHapticFeedback(1);
+                    if(isChecked)
+                        switchOn((char)(buttonView.getId()-35));
+                    else
+                        switchOff((char)(buttonView.getId()-35));
 
-        //get values
-        //SharedPreferences prefs=this.getSharedPreferences("MY_PREFS")
+                }
+            });
+            customLayout.addView(lines[i]);
+        }
+        /*final ImageButton voiceIn=new ImageButton(this);
+        voiceIn.setImageResource(android.R.drawable.presence_audio_online);
+        voiceIn.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT*2));
+        LinearLayout lastLine=new LinearLayout(this);
+        lastLine.addView(voiceIn);
+        lastLine.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+        voiceIn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                voiceIn.performHapticFeedback(1);
+                Intent i=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                i.putExtra(RecognizerIntent.EXTRA_PROMPT,"PLEASE SPEAK");
+                startActivityForResult(i,SPEAK);
+            }
+        });
+        customLayout.addView(lastLine);*/
+        setContentView(customLayout);
     }
 
     private void switchOn(char a)
